@@ -1,0 +1,78 @@
+{% include 'base.html.twig' %}
+{% include 'profil/profil.html.twig' %}
+
+
+<style>
+    a:link {
+        text-decoration: none;
+    }
+
+    a:visited {
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+
+    a:active {
+        text-decoration: none;
+    }
+</style>
+
+{% if produits %}
+
+    <div class="container-fluid" style="margin-top: 50px; width: 100%;">
+        <br><br>
+        <h2 style="text-align: center">Mes annonces</h2><br><br>
+        <ul style="list-style: none; float: center; margin-left: 0 ; padding: 0; display: flex; position: center; display: table;">
+            {% for produit in produits %}
+                <li style="list-style: none; padding-left: 40px; text-align: center; padding-bottom: 40px; display: inline-block;">
+                    <div class="form-control" style="line-height: 5px; padding: 12px 30px; width: 260px; height: 370px">
+                        <table border="1" bordercolor="white">
+                            <tr>
+                                <td><a href="{{ path('produit', {'id': produit.id} ) }}"><h5
+                                                style="font-size: x-large;  text-transform: capitalize; color: #007dbc; text-align: center; white-space: nowrap; width: 8em; overflow:hidden; text-overflow: ellipsis; padding-bottom: 1%">{{ produit.nomprod }} </h5>
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><h6 style="font-size: small">
+                                        {% if ( produit.dateAjout | date('j')  ==  'now' | date('j')) %}
+                                            Aujourd'hui {{ produit.dateAjout | date('H:i')}},
+                                        {% elseif ( produit.dateAjout | date('j')  ==  'now' | date('j')-1) %}
+                                            Hier {{ produit.dateAjout | date('H:i')}},
+                                        {% else %}
+                                            {{ produit.dateAjout | localizeddate('none', 'none', null, null, 'd MMMM') }} {{ produit.dateAjout | date('H:i')}},
+                                        {% endif %}
+                                        <img src="{{ asset('images/map-marker.png') }}"
+                                             style="width: 11px; margin-top: -5px; ">
+                                        {{ produit.region.nomRegion }}, {{ produit.ville.nomVille }}
+                                    </h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h6 style="">Prix : {{ produit.prix }} DT</h6></td>
+                            </tr>
+                            <tr>
+                                <td><a href="{{ path('produit', {'id': produit.id} ) }}"><img style="width: 200px; height: 200px;"
+                                                                             src="{{ asset('uploads/images/' ~ produit.images[0].name ) }}"
+                                                                             alt="Image"></a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <br>
+
+    </div>
+{% else %}
+    <br>
+    <center>
+        <h2 style="text-align: center">Vous n'avez pas d'annonces</h2><br><br>
+        <img src="{{ asset('images/noAnnonces.png') }}" alt="Pas d'annonces">
+        <form method="post" action="{{ path('ajouter') }}" style="margin-top: 30px">
+            <button type="submit" class="btn btn-primary btn-lg my-2 my-sm-0 ml-2">Déposer annonce</button>
+        </form>
+    </center>
+{% endif %}

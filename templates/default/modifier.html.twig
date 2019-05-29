@@ -1,0 +1,291 @@
+{% include 'base.html.twig' %}
+{% block body %}
+<style type="text/css">
+#App_produit_type_0{
+  margin-right: 5px;
+}
+
+#App_produit_type_1{
+  margin-right: 5px;
+  margin-left: 15%;
+}
+
+
+
+
+
+.thumbnail{
+  width:190px ;
+  height: 190px;
+  margin: 30px 30px 10px 40px; 
+  float: left;
+}
+#clear{
+ display:inline-block;
+
+}
+#result {
+  border: 2px solid #cccccc;
+  display: block;
+  float: right;
+  height: 600px;
+  margin-right: 0 0 0 0;
+  width: 560px ;
+
+  overflow-y: scroll;
+}
+
+</style>
+
+
+
+<h2 class="page-header" style="text-align: center; padding-top: 30px">Modifier votre annonce</h2>
+<div class="form-control"
+style="width: 90%; margin-left: 3%; padding-bottom: 50px; float: left; margin-bottom: 100px; margin-top: 15px">
+{{ form_start(form) }}
+
+
+
+
+<div style="width: 49%; float: left;">
+
+  <h3 style="text-align: center;">Informations</h3>
+  <hr>
+
+  {{ form_row(form.categorie) }}
+
+  {% for categorie in categories %}
+  <div id="Scategories{{ categorie.id }}" style="display: none;">
+    <label for="sousCategorie" class="required">Sous catégorie :</label>
+    <select id="sousCategorie" name="" class="form-control" style="margin-button:15px">
+      {% for sousCategorie in sousCategories %}
+      {% if sousCategorie.categorie.id == categorie.id %}
+      <option value="{{ sousCategorie.id }}">{{ sousCategorie.nomSousCategorie }}</option>
+      {% endif %}
+      {% endfor %}                
+    </select>
+  </div>
+  {% endfor %}
+
+
+
+
+  {{ form_label(form.type) }}
+  <center>
+    {{ form_widget(form.type) }}
+  </center>
+  {{ form_row(form.nomprod) }}
+  {{ form_row(form.prix) }}
+  {{ form_row(form.description) }}
+
+
+
+  <div style="margin-top: 35px; margin-bottom: 15px">
+   <p style="float: left; margin-right: 75px; margin-top: 5px"> Afficher votre numéro de téléphone :</p>
+   <label class="switch">
+    {% if produit.afficherNum == false %}
+    <input type="checkbox">
+    <span class="slider round" onclick="changeAfficherNum()"></span>
+    <input type="hidden" name="afficherNum" id="afficherNum" value="false">
+    {% else %}
+    <input type="checkbox" checked>
+    <span class="slider round" onclick="changeAfficherNum()"></span>
+    {% endif %}
+  </label>
+</div>
+
+
+{{ form_row(form.region) }}
+
+{% for region in regions %}
+<div id="ville{{ region.id }}" style="display: none;">
+  <label for="ville" class="required">Ville :</label>
+  <select id="ville" name="" class="form-control" style="margin-button:15px">
+    {% for ville in villes %}
+    {% if ville.region.id == region.id %}
+    <option value="{{ ville.id }}">{{ ville.nomVille }}</option>
+    {% endif %}
+    {% endfor %}                
+  </select>
+</div>
+{% endfor %}
+
+</div>
+
+<div style="width: 49%; float: right;">
+  <h3 style="text-align: center;">Images</h3>
+  <hr>
+
+  <input type="hidden" id="changed" name="changed" value="false">
+
+</div>          
+<article >
+  <label for="App_produit_images" class="btn btn-success" style="margin-left: 4%; margin-bottom: 0">Choisir des images</label>
+  {{ form_widget(form.images) }}
+
+  <button class="btn btn-danger" type="button" id="clear" style="margin-left: 26%;">Effacer</button>
+
+  <br>
+  <output id="result" />
+  {% for image in images %}
+  <div>
+    <img  class='thumbnail' src="{{ asset('uploads/images/' ~ image.name ) }} "
+    title='preview image'/>
+  </div>
+  {% endfor %}
+</article>
+
+<center>
+
+  <div style="width: 100%; margin-top: 20px">
+    {{ form_row(form.valider) }}
+  </div>
+  {{ form_end(form) }}
+</center>
+
+
+</div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+ var x =document.getElementById('App_produit_categorie').value ; 
+ document.getElementById("Scategories"+x).style.display= "block";
+ var c = document.getElementById("Scategories{{produit.categorie.id}}").children;
+ c[1].value = "{{ produit.sousCategorie.id }}";
+ c[1].name = "sousCategorie";
+ document.getElementById("sousCategorie").value= "{{ produit.sousCategorie.id }}";
+ var y =document.getElementById('App_produit_region').value ; 
+ document.getElementById("ville"+y).style.display= "block";
+ var c = document.getElementById("ville{{produit.region.id}}").children;
+ c[1].value = "{{ produit.ville.id }}";
+ c[1].name = "ville";
+
+ document.getElementById('App_produit_categorie').onchange = function () {
+  if (document.getElementById('App_produit_categorie').value == "9") {
+    document.getElementById("prix").textContent = 'Salaire (DT) :'
+    document.getElementById("nom").textContent = 'Titre  de l\'offre :'
+  } else {
+    document.getElementById("nom").textContent = 'Nom du Produit :'
+    document.getElementById("prix").textContent = 'Prix (DT) :'
+  }
+  {% for categorie in categories %}
+  document.getElementById("Scategories{{categorie.id}}").style.display= "none";
+  var c = document.getElementById("Scategories{{categorie.id}}").children;
+  c[1].name = "sss";
+  {% endfor %}
+  x = "Scategories"+document.getElementById('App_produit_categorie').value;
+  document.getElementById(x).style.display="block"; 
+  var c = document.getElementById(x).children;
+  c[1].name = "sousCategorie";
+}
+
+document.getElementById('App_produit_region').onchange = function () {
+  {% for region in regions %}
+  document.getElementById("ville{{region.id}}").style.display= "none";
+  var c = document.getElementById("ville{{region.id}}").children;
+  c[1].name = "vvv";
+  {% endfor %}
+  x = "ville"+document.getElementById('App_produit_region').value;
+  document.getElementById(x).style.display="block"; 
+  var c = document.getElementById(x).children;
+  c[1].name = "ville";
+}
+
+
+
+function changeAfficherNum() {
+  if(document.getElementById('afficherNum').value=='false'){
+    document.getElementById('afficherNum').value='true';
+  }else{
+    document.getElementById('afficherNum').value='false';
+  }
+}
+
+
+
+
+window.onload = function(){   
+    //Check File API support
+    if(window.File && window.FileList && window.FileReader)
+    {
+     var fl =window.FileList;   
+     $('#App_produit_images').change( function(event) {
+      document.getElementById('changed').value="true";
+            var files = event.target.files; //FileList object
+            var output = document.getElementById("result");
+            if(files.length<5)
+            {
+              for(var i = 0; i< files.length; i++)
+              {
+                var file = files[i];
+
+                if(file.type.match('image.*')){
+                  if(this.files[i].size < 2097152){    
+                  // continue;
+                  var picReader = new FileReader();
+                  picReader.addEventListener("load",function(event){
+                    var picFile = event.target;
+                    var div = document.createElement("div");
+                    div.innerHTML = "<img  class='thumbnail' src='" + picFile.result + "'" +
+                    "title='preview image'/>";
+                    output.insertBefore(div,null);            
+                  });
+                  $('#clear, #result').show();
+                  picReader.readAsDataURL(file);
+                }else{
+                  alert("Image trog grande, la taille maximalle est 2MB.");
+                  $(this).val("");
+                }
+              }else{
+                alert("Le fichier choisi n'est pas une image.");
+                $(this).val("");
+              }
+            } 
+          } else{
+            alert("Les comptes gratuits sont limité à 4 images !")
+          }
+
+
+        });
+   }
+   else
+   {
+    console.log("Your browser does not support File API");
+  }
+}
+
+$('#clear').click(function() {
+  $('.thumbnail').parent().remove();
+  $('#App_produit_images').val("");
+  $(this).hide();
+  document.getElementById('changed').value="true";
+});
+
+$('#App_produit_images').click(function() {
+  $('.thumbnail').parent().remove();
+  $('#App_produit_images').val("");
+  $('#clear').hide();
+  document.getElementById('changed').value="true";
+});
+
+function verif() {
+  if(document.getElementById('changed').value=='false'){
+    return true;
+  } else{
+   if(document.getElementById('App_produit_images').files.length == 0){
+    alert('L\'annonce doit avoir au moins une image !');
+    return false;
+  }else{
+    return true;
+  }
+}}
+
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+<style>
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+</style>
+{% if horizentale.publicite == true %}
+<div id="horizentale" name="horizentale" style="width: 65%; height: 235px; z-index: 1; margin-top: 160px; position: absolute;margin-left:27% ; background-color: black">
+    <img style="width: 100%; height: 100%;" src="{{ asset('images/pub.png') }}">
+</div>
+
+<div style="width: 65%; height: 235px;  margin-left:27% ;">
+    
+</div>
+{% endif %}
+
+{% if produits.getTotalItemCount()!=0 %}
+
+
+
+
+<div class="container-fluid" style="float: right; width: 69%; margin-right: 7%; margin-top: 165px ; padding-bottom: 70px">
+
+    <h3 style="text-align: center">{{ results }}</h3><br><br>
+
+
+    <ul style="list-style: none;  margin-left: 0 ; padding: 0; display: flex; position: center; display: table;">
+        {% for produit in produits %}
+        <li style="list-style: none; padding-left: 40px; text-align: center; padding-bottom: 40px; display: inline-block;">
+            <div class="form-control" style="line-height: 5px; padding: 12px 30px; width: 260px; height: 370px">
+                <table border="1" bordercolor="white">
+                    <tr>
+                        <td><a href="{{ path('produit', {'id': produit.id} ) }}"><h5
+                            style="font-size: x-large;  text-transform: capitalize; color: #007dbc; text-align: center; white-space: nowrap; width: 8em; overflow:hidden; text-overflow: ellipsis; padding-bottom: 1%">{{ produit.nomprod }} </h5>
+                        </a></td>
+                    </tr>
+                    <tr>
+                        <td><h6 style="font-size: small; text-transform: capitalize;">
+                            {% if ( produit.dateAjout | date('j')  ==  'now' | date('j')) %}
+                            Aujourd'hui {{ produit.dateAjout | date('H:i') }},
+                            {% elseif ( produit.dateAjout | date('j')  ==  'now' | date('j')-1) %}
+                            Hier {{ produit.dateAjout | date('H:i') }},
+                            {% else %}
+                            {{ produit.dateAjout | localizeddate('none', 'none', null, null, 'd MMMM') }} {{ produit.dateAjout | date('H:i') }},
+                            {% endif %}
+                            <img src="{{ asset('images/map-marker.png') }}"
+                            style="width: 11px; margin-top: -5px; ">
+                            <a href="#"
+                            onclick="ville('{{ produit.region.nomRegion }}')">{{ produit.region.nomRegion }}</a>, {{ produit.ville.nomVille }}
+                        </h6>
+                    </td>
+                </tr>
+
+                <tr>{% if produit.categorie.nomCategorie == 'Offres d\'emploi' %}
+                    <td><h6 style="">Salaire : {{ produit.prix }} DT</h6></td>
+                    {% else %}
+                    <td><h6 style="">Prix : {{ produit.prix }} DT</h6></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{{ path('produit', {'id': produit.id} ) }}"><img style="width: 200px; height: 200px;"
+                       src="{{ asset('uploads/images/' ~ produit.images[0].name ) }}"
+                       alt="Image"></a></td>
+                   </tr>
+               </table>
+           </div>
+       </li>
+       {% endfor %}
+   </ul>
+   <div class="navigation" style="margin-left: 36%; margin-top: -35px">
+    {{ knp_pagination_render(produits) }}
+</div>
+
+</div>
+
+{% else %}
+<div class="container-fluid" style="float: right; width: 69%; margin-right: 2%; margin-top: 165px ">
+    <center>
+        <h3 style="text-align: center">{{ results }}</h3><br><br>
+
+        <img src="{{ asset('images/noAnnonces.png') }}" alt="Pas d'annonces">
+    </center>
+</div>
+<script type="text/javascript">
+    document.getElementById('barreTri').style.display = 'none';
+</script>
+{% endif %}
+
+
+<script type="text/javascript">
+    function ville(e) {
+        document.getElementById('region').value = e;
+        document.getElementById("search").submit();
+    }
+</script>

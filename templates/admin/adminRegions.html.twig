@@ -1,0 +1,87 @@
+{% include 'admin/admin.html.twig' %}
+<br><br><br>
+{% if regions %}
+<h3 style="text-align: center;">Régions</h3>
+<a href="{{ path('ajouterRegion') }}"><button class="btn btn-success" style="float: right; margin-bottom: 5px">Ajouter</button></a>
+<br>
+<table class="table table-bordered">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col" style="text-align: center;">Nom</th>
+			<th scope="col" style="text-align: center;">Villes</th>
+			<th scope="col" style="text-align: center; width: 160px;">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{% for region in regions %}
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">{{ region.nomRegion }}</td>
+			<td style="text-align: center; vertical-align: middle;">
+				{% if region.ville.get(0)!='' %}
+				<ul style="list-style: none; margin: 0 ; padding: 0">	
+					{% for ville in region.ville %}
+					<li>{{ ville.nomVille }}</li>
+					{% endfor %}
+				</ul>
+				{% else %}
+				-
+				{% endif %}
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<a href="{{ path('modifierRegion', {id: region.id} ) }}"><button class="btn btn-primary btn-lg" onclick="" style="margin-right: 10px;">
+					<i class="material-icons">edit</i>
+				</button></a>
+				<button class="btn btn-danger btn-lg" onclick="showConfirm({{ region.id }})">
+					<i class="material-icons">delete</i>
+				</button>
+			</td>
+		</tr>
+		<div id="confirm{{ region.id }}" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title" style="margin-left: 70px">Confirmer la suppression</h2>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+						</button>
+					</div>
+					<div class="modal-body">
+						<h4 style="">Êtes-vous sûr de vouloir supprimer définitivement la région {{ region.nomRegion }} et ses villes ?</h4>
+					</div>
+					<div class="modal-footer">
+						<a href="{{ path('supprimerRegion', {id: region.id}) }}"><button type="button" class="btn btn-danger">Oui</button></a>
+						<button type="button" class="btn btn-success" onclick="hideConfirm({{ region.id }})">Non</button>
+						<button type="button" class="btn btn-primary" onclick="hideConfirm({{ region.id }})">Annuler</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<h3 style="text-align: center;">Aucune région existante</h3>
+<br><br>
+<center>
+	<img src="{{ asset('images/noAnnonces.png') }}" alt="Pas de régions">
+</center>
+{% endif %}
+
+<div style="position: fixed; background-color: black; width: 100%; height: 100%; top: 0; opacity: 0.6; display: none; z-index: 8"
+id="black_div">
+</div>
+
+
+<script type="text/javascript">
+	function showConfirm(id) {
+		document.getElementById('confirm'+id).style.display = "block";
+		document.getElementById('black_div').style.display = "block";
+	}
+
+	function hideConfirm(id) {
+		document.getElementById('confirm'+id).style.display = "none";
+		document.getElementById('black_div').style.display = "none";
+	}
+
+</script>

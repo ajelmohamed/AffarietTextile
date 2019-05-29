@@ -1,0 +1,67 @@
+{% include 'base.html.twig' %}
+{% include 'profil/profil.html.twig' %}
+
+<div class="form-control" style="width: 40%; margin-top: 150px; margin-left: 30%; margin-bottom: 100px; padding: 25px">
+    <h3 style="text-align: center">Réglages</h3>
+    <hr>
+    {{form_start(form)}}
+    {{ form_row(form.username) }}
+    {{ form_row(form.nomAnnonceur) }}
+    {{ form_row(form.prenomAnnonceur) }}
+    {{ form_row(form.emailAnnonceur) }}
+    {{ form_row(form.numAnnonceur) }}
+
+    <div style="float: left; margin-top: 37px; margin-right: 75px">
+     <label for="form_imageAnnonceur" class="btn btn-primary" style="margin-top:25px; margin-left: 30px">Modifier image</label>
+     {{ form_widget(form.imageAnnonceur) }}
+ </div>
+ <input type="hidden" id="changed" name="changed" value="false">
+
+ <div style="margin-top: 10px;">
+    <img id="preview" src="{{ asset('uploads/profile_images/' ~  annonceur.imageAnnonceur) }}" style="width: 150px; height: 150px; border-radius: 300px" />
+</div>
+<br>
+<div style="width: 30px; float:left; margin-top: -2px">
+    <i class="material-icons">lock outline</i>
+</div>
+<a href="{{ path('reglagesPassword')}}">Modifier votre mot de passe</a>
+<br>
+
+
+
+{{ form_row(form.confirmer) }}
+{{form_end(form)}}
+</div>
+
+<script type="text/javascript">
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#preview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            hideImage();
+        }
+    }
+
+    function hideImage(){
+        $('#preview').attr('src', "{{ asset('uploads/profile_images/defaut.png') }}");
+    }
+
+    $("#form_imageAnnonceur").change(function() {
+        readURL(this);
+    });
+
+    $('#form_imageAnnonceur').click(function() {
+        hideImage();
+        document.getElementById('changed').value="true";   
+    });
+
+
+
+</script>

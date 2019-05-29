@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Affariat Textile{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-grid.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-reboot.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('css/w3.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icon.css') }}">
+
+    <script type="text/javascript" src="{{ asset('js/popper.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-3.2.1.slim.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-between" id="mainNav"
+    style="position: fixed; top: 0; width: 100%; z-index: 6">
+    <a class="navbar-brand" href="{{ path('homepage') }}"><img width="120px" src="{{ asset('images/logo.png') }}" alt="My logo"/></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminDashboard') }}">Dashboard<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminAnnonceurs') }}">Annonceurs<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminAnnonces') }}">Annonces<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminArchive') }}">Archive<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminCategories') }}">Catégories<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminRegions') }}">Régions<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="padding-right: 20px">
+            <a class="nav-link" href="{{ path('adminReglages') }}">Réglages<span class="sr-only">(current)</span></a>
+        </li>
+    </ul>
+<ul class="navbar-nav">
+
+    <li class="nav-link">{{ app.user.nomAdmin }}</li>
+    <li class="nav-item"><a class="nav-link" href="{{ path('logout') }}"><i class="material-icons">power_settings_new</i></a></li>
+</ul>
+</div>
+</nav>
+
+{% set msg=false %}
+<div class="row" style="display: none; width: 100%; height:55px ; z-index: 19; margin: 0; position: fixed" id="messages">
+<div style="width: 100%;">
+        <center>
+            {% for flash_message in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success" style="width: 100%; height:55px;">{{ flash_message }}</div>
+                {% set msg=true %}
+            {% endfor %}
+            {% for flash_message in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger" style="width: 100%; height:55px;">{{ flash_message }}</div>
+                {% set msg=true %}
+            {% endfor %}
+        </center>
+        {% if msg==true %}
+            <button class="btn btn-danger" style="position: fixed; right: 0; top: 0; display: block" id="cacher"
+                    onclick="hideMessages()">X
+            </button>
+            <script type="text/javascript">
+                document.getElementById('messages').style.display = "block";
+            </script>
+        {% else %}
+            <button class="btn btn-danger" style="position: fixed; right: 0; top: 0; display: none" id="cacher"
+                    onclick="hideMessages()">X
+            </button>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript">
+    function hideMessages() {
+        document.getElementById('messages').style.display = "none";
+        document.getElementById('cacher').style.display = "none";
+    }
+
+    window.setTimeout(hideMessages, 3000);
+
+</script>
+</body>

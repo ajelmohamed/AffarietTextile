@@ -1,0 +1,13 @@
+{% include 'base.html.twig' %}
+{% block body %}
+    {% include 'default/searchbar.html.twig' %}
+    {% include 'default/afficher.html.twig' %}
+    {% include 'default/villes.html.twig' %}
+
+{% endblock %}
+
+<script type="text/javascript">
+    document.getElementById('tri').onchange = function () {
+        document.getElementById("search").submit();
+    }
+</script>

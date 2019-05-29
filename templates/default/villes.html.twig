@@ -1,0 +1,24 @@
+{% if horizentale.publicite == true %}
+<div class="form-control" style="width: 22%; margin-left: 4%; padding-left: 40px; margin-top:-80px; position: fixed; background-color: rgb(252, 252, 252) ">
+{% else %}
+<div class="form-control" style="width: 22%; margin-left: 4%; padding-left: 40px; margin-top:165px; position: fixed; background-color: rgb(252, 252, 252) ">
+{% endif %}
+    <h3 style="text-align: center">Choisissez une catégorie</h3>
+    <center>
+        <table>
+            {% for categorie in categories %}
+            
+
+            <tr>
+                <th>
+                    <img style="width: 40px; height: 40px" src="{{ asset('uploads/categories/' ~ categorie.image ) }}" alt="Image Categorie"></td>
+                </th>
+                <th width="20"></th>
+                <th>
+                    <a href="{{ path('produits') }}/{{ categorie.nomCategorie }}" class="btn btn-light btn-block" style="background-color: rgb(252, 252, 252)">{{ categorie.nomCategorie }}</a>
+                </th>
+            </tr>
+            {% endfor %}
+        </table>
+    </center>
+</div>

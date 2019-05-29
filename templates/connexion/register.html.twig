@@ -1,0 +1,108 @@
+{% include 'base.html.twig' %}
+{% block body %}
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+
+<style type="text/css">
+li{
+    color: red;
+}
+
+.input-group-text {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */     
+}
+</style>
+<div class="form-control" style="width: 40% ; margin-left: 30%; ">
+    <h3 style="text-align: center">Créer un compte</h3>
+    <hr>
+    {{form_start(form)}}
+    <i style="color: rgb(230,0,0)">* </i>{{ form_label(form.username) }}
+    {{ form_widget(form.username) }}
+    {{ form_errors(form.username) }}
+
+    <i style="color: rgb(230,0,0)">* </i>{{ form_label(form.emailAnnonceur) }}
+    {{ form_widget(form.emailAnnonceur) }}
+    {{ form_errors(form.emailAnnonceur) }}
+
+    <i style="color: rgb(230,0,0)">* </i>{{ form_label(form.password.first) }}
+    {{ form_widget(form.password.first) }}
+    <i style="color: rgb(230,0,0)">* </i>{{ form_label(form.password.second) }}
+    {{ form_widget(form.password.second) }}
+
+    {{ form_row(form.nomAnnonceur) }}
+    {{ form_row(form.prenomAnnonceur) }}
+
+
+
+    <i style="color: rgb(230,0,0)">* </i>{{ form_label(form.numAnnonceur) }}
+    {{ form_widget(form.numAnnonceur) }}
+    {{ form_errors(form.numAnnonceur) }}
+
+    <div style="float: left; margin-top: 37px; margin-right: 75px">
+     <label for="app_annonceur_imageAnnonceur" class="btn btn-primary" style="margin-top:25px; margin-left: 30px">Choisir une image</label>
+     {{ form_widget(form.imageAnnonceur) }}
+ </div>
+
+ <div style="margin-top: 10px;">
+    <img id="preview" src="{{ asset('images/defaut.png') }}" style="width: 150px; height: 150px; border-radius: 300px" />
+</div>
+<br>
+
+
+<i style="color: rgb(230,0,0)">* </i><label for="captcha">Captcha :</label>
+<center>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">{{ a }} + {{ b }} =</span>
+        <input type="hidden" name="c" id="c">
+    </div>
+    <input id="captcha" name="captcha" type="number" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" required>
+</div>
+
+</center>
+
+<br>
+<hr>
+<p style="font-size: smaller;">Indications :</p>
+<p style="font-size: smaller;">- (<i style="color: rgb(230,0,0)">*</i>) Champs obligatoires.</p>
+<hr>
+{{ form_row(form.créer) }}
+{{form_end(form)}}
+<hr>
+<p style="text-align: center; font-size: small">
+    Vous avez déjà un compte ?
+    <a href="{{ path('login') }}" style="color: #3f51b5;">Se connecter</a>
+</p>
+</div>
+<br><br><br>
+
+<script type="text/javascript">
+    document.getElementById('c').value = {{c}};
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#preview').attr('src', e.target.result);
+                document.getElementById('preview').style.borderColor = "white";
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            hideImage();
+        }
+    }
+
+    function hideImage(){
+        $('#preview').attr('src', "{{ asset('images/defaut.png') }}");
+    }
+
+    $("#app_annonceur_imageAnnonceur").change(function() {
+        readURL(this);
+    });
+</script>
+{% endblock %}

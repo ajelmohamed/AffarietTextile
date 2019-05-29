@@ -1,0 +1,28 @@
+{% include 'base.html.twig' %}
+{% block body %}
+    {% include 'default/searchbar.html.twig' %}
+    {% include 'default/afficher.html.twig' %}
+    {% include 'default/villes.html.twig' %}
+
+{% endblock %}
+{% if produits.getTotalItemCount()!=0 %}
+<form method="get" id="barreTriCateg" style="position: absolute ; margin-left: 74% ; margin-top: 223px">
+    <div>
+        Trier par :
+        <select name="triCateg" id="triCateg" style="width: 64%; height: 30px; border-color: #ccc">
+        <option value=""></option>
+        <option value="prix asc">Prix le plus bas</option>
+        <option value="prix desc">Prix le plus élevé</option>
+        <option value="date_ajout">Le plus récent</option>
+    </select>
+    </div>
+</form>
+{% endif %}
+<script type="text/javascript">
+
+    document.getElementById('barreTri').style.display = 'none';
+    document.getElementById('triCateg').value = '{{ tri }}';
+    document.getElementById('triCateg').onchange = function () {
+        document.getElementById('barreTriCateg').submit();
+    }
+</script>

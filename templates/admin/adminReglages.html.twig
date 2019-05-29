@@ -1,0 +1,74 @@
+{% include 'admin/admin.html.twig' %}
+
+{{form_start(form)}}
+	<div class="form-control" style="width: 30%; height: 270px; margin-top: 100px; margin-left: 35%">
+		<h2 style="text-align: center;">Publicité</h2>
+		<hr>
+		<table>
+			<tr>
+				<th>
+
+					<h3 style="margin-left: 50px">Horizentale :</h3> 
+				</th>
+				<th>
+					{% if horizentale.publicite == false %}
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: block;" id="horD" class="btn btn-danger" onclick="horizentale()">Désactivé</a>
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: none;" id="horA" class="btn btn-success" onclick="horizentale()">Activé</a>
+					<input type="hidden" name="horizentale" id="horizentale" value="false">
+
+					{% else %}
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: none;" id="horD" class="btn btn-danger" onclick="horizentale()">Désactivé</a>
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: block;" id="horA" class="btn btn-success" onclick="horizentale()">Activé</a>
+					<input type="hidden" name="horizentale" id="horizentale" value="true">
+					{% endif %}
+				</th>
+
+			</tr>
+
+			<tr>
+				<th>
+					<h3 style="margin-left: 50px">Verticale :</h3> 
+				</th>
+				<th>
+					{% if verticale.publicite == false %}
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: block;" id="verD" class="btn btn-danger" onclick="verticale()">Désactivé</a>
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: none;" id="verA" class="btn btn-success" onclick="verticale()">Activé</a>
+					<input type="hidden" name="verticale" id="verticale" value="false">
+					{% else %}
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: none;" id="verD" class="btn btn-danger" onclick="verticale()">Désactivé</a>
+					<a href="#" style="margin-top: 10px; margin-left: 20px; width: 100px; display: block;" id="verA" class="btn btn-success" onclick="verticale()">Activé</a>
+					<input type="hidden" name="verticale" id="verticale" value="true">
+					{% endif %}
+				</th>
+			</tr>
+		</table>
+		<input type="submit" value="Enregistrer" name="enregistrer" class="btn btn-success btn-block" style="margin-top: 30px">
+
+	</div>
+{{form_end(form)}}
+
+
+<script type="text/javascript">
+	function verticale() {
+		if(document.getElementById('verticale').value=='false'){
+			document.getElementById('verticale').value='true';
+			document.getElementById('verA').style. display='block';
+			document.getElementById('verD').style. display='none';
+		}else{
+			document.getElementById('verticale').value='false';
+			document.getElementById('verA').style. display='none';
+			document.getElementById('verD').style. display='block';
+		}
+	}
+	function horizentale() {
+		if(document.getElementById('horizentale').value=='false'){
+			document.getElementById('horizentale').value='true';
+			document.getElementById('horA').style. display='block';
+			document.getElementById('horD').style. display='none';
+		}else{
+			document.getElementById('horizentale').value='false';
+			document.getElementById('horA').style. display='none';
+			document.getElementById('horD').style. display='block';
+		}
+	}
+</script>

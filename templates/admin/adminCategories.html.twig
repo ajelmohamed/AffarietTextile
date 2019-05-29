@@ -1,0 +1,89 @@
+{% include 'admin/admin.html.twig' %}
+<br><br><br>
+{% if categories %}
+<h3 style="text-align: center;">Catégories</h3>
+<a href="{{ path('ajouterCategorie') }}"><button class="btn btn-success" style="float: right; margin-bottom: 5px">Ajouter</button></a>
+<br>
+<table class="table table-bordered">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col" style="text-align: center;">Nom</th>
+			<th scope="col" style="text-align: center;">Image</th>
+			<th scope="col" style="text-align: center;">Sous catégories</th>
+			<th scope="col" style="text-align: center; width: 160px;">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{% for categorie in categories %}
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">{{ categorie.nomCategorie }}</td>
+			<td style="text-align: center; vertical-align: middle;"><img style="width: 70px; height: 70px" src="{{ asset('uploads/categories/' ~ categorie.image ) }}" alt="Image Categorie"></td>
+			<td style="text-align: center; vertical-align: middle;">
+				{% if categorie.sousCategorie.get(0)!='' %}
+				<ul style="list-style: none; margin: 0 ; padding: 0">	
+					{% for sousCategorie in categorie.sousCategorie %}
+					<li>{{ sousCategorie.nomSousCategorie }}</li>
+					{% endfor %}
+				</ul>
+				{% else %}
+				-
+				{% endif %}
+			</td>
+			<td style="text-align: center; vertical-align: middle;">
+				<a href="{{ path('modifierCategorie', {id: categorie.id} ) }}"><button class="btn btn-primary btn-lg" onclick="" style="margin-right: 10px;">
+					<i class="material-icons">edit</i>
+				</button></a>
+				<button class="btn btn-danger btn-lg" onclick="showConfirm({{ categorie.id }})">
+					<i class="material-icons">delete</i>
+				</button>
+			</td>
+		</tr>
+		<div id="confirm{{ categorie.id }}" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title" style="margin-left: 70px">Confirmer la suppression</h2>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+						</button>
+					</div>
+					<div class="modal-body">
+						<h4 style="">Êtes-vous sûr de vouloir supprimer définitivement la catégories {{ categorie.nomCategorie }} et ses sous catégories ?</h4>
+					</div>
+					<div class="modal-footer">
+						<a href="{{ path('supprimerCategorie', {id: categorie.id}) }}"><button type="button" class="btn btn-danger">Oui</button></a>
+						<button type="button" class="btn btn-success" onclick="hideConfirm({{ categorie.id }})">Non</button>
+						<button type="button" class="btn btn-primary" onclick="hideConfirm({{ categorie.id }})">Annuler</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<h3 style="text-align: center;">Aucune catégorie existante</h3>
+<br><br>
+<center>
+	<img src="{{ asset('images/noAnnonces.png') }}" alt="Pas de catégories">
+</center>
+{% endif %}
+
+<div style="position: fixed; background-color: black; width: 100%; height: 100%; top: 0; opacity: 0.6; display: none; z-index: 8"
+id="black_div">
+</div>
+
+
+<script type="text/javascript">
+	function showConfirm(id) {
+		document.getElementById('confirm'+id).style.display = "block";
+		document.getElementById('black_div').style.display = "block";
+	}
+
+	function hideConfirm(id) {
+		document.getElementById('confirm'+id).style.display = "none";
+		document.getElementById('black_div').style.display = "none";
+	}
+
+</script>

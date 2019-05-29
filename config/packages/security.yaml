@@ -1,14 +1,44 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-        in_memory: { memory: ~ }
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            anonymous: true
+   encoders:
+        App\Entity\Annonceur:
+            algorithm: bcrypt
+        App\Entity\Admin:
+            algorithm: bcrypt
+ 
 
+   providers:
+       admin:
+         entity:
+            class: App:Admin
+            property: emailAdmin
+       users:
+          entity:
+            class: App:Annonceur
+            property: emailAnnonceur
+
+       
+
+   firewalls:
+        admin_secured_area:
+            pattern:   ^/admin
+            anonymous: ~
+            provider: admin
+            form_login:
+                login_path: login
+                check_path: login_check
+                #default_target_path: /admin
+
+        user_secured_area:
+            pattern:   ^/
+            anonymous: ~
+            provider: users
+            form_login:
+                login_path: login
+                check_path: login
+                #default_target_path: /home
+            logout:
+                path: /logout
+                target: /
             # activate different ways to authenticate
 
             # http_basic: true
@@ -19,6 +49,14 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-    access_control:
+   access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+ 
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/ajouter, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/modifier, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/supprimer, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }

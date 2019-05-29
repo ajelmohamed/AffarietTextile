@@ -1,0 +1,130 @@
+<form class="form-inline" method="get" action="{{ path('chercher') }}" id="search">
+
+    <div class="form-control"
+    style="width: 88%; height: 163px ; margin-left: 4%; margin-top: 70px ; background-color: rgb(252, 252, 252); position: fixed; z-index: 5 ">
+    <center>
+        <h3 style="text-align: center">Cherchez des annonces plus simple avec Affariat Textile</h3>
+        <hr>
+        <div style="position: absolute; padding-top: 6px; padding-left: 3%">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="Que cherchez vous ?" name="motCle" id="motCle"
+        style="height: 35px; width: 35%; margin-right: 10px; padding-left: 2.5%">
+        <select name="categorie" id="categorie" style="height: 35px; width: 25%; margin-right: 10px">
+            <option value="">Tous les catégories</option>
+            {% for categorie in categories %}
+            <option value="" disabled>-- {{ categorie.nomCategorie }} --</option>
+            {% if categorie.sousCategorie.get(0)!='' %}
+            {% for sousCategorie in categorie.sousCategorie %}
+                <option value="{{ sousCategorie.nomSousCategorie }}">{{ sousCategorie.nomSousCategorie }}</option>
+            {% endfor %}
+            {% else %}
+             <option value="{{ categorie.nomCategorie }}">{{ categorie.nomCategorie }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <select name="region" id="region" style="height: 35px; width: 20%; margin-right: 10px">
+            <option value="">Toute la Tunisie</option>
+            {% for region in regions %}
+            <option value="{{ region.nomRegion }}">{{ region.nomRegion }}</option>
+            {% endfor %}
+        </select>
+        
+
+        <button type="submit" class="btn btn-success" style="width: 11%; height: 35px; margin-top: -5px">Chercher
+        </button>
+    </center>
+
+    <div style="margin-top: 10px; margin-left: 65px; float: left;">
+        <input type="radio" name="type" id="Offre" value="Offre"> Offre
+        <input type="radio" name="type" id="Demande" value="Demande" style="margin-left: 10px;"> Demande
+    </div>
+
+{% for region in regions %}
+    <select name="" id="ville{{ region.nomRegion }}" style="height: 35px; width: 20%; margin-left: 65.1%; margin-top: 5px; display: none;">
+        <option value="">Toutes les villes de {{ region.nomRegion }}</option> 
+            {% for ville in villes %}
+            {% if ville.region.id == region.id %}
+                <option value="{{ ville.nomVille }}">{{ ville.nomVille }}</option>
+            {% endif %}
+            {% endfor %}
+    </select>
+{% endfor %}
+
+
+
+</div>
+
+{% if horizentale.publicite == true %}
+<div id="barreTri" style="position: absolute ; margin-left: 74% ; margin-top: 460px">
+    Trier par :
+    <select name="tri" id="tri" style="width: 64%; height: 30px; border-color: #ccc">
+        <option value=""></option>
+        <option value="prix asc">Prix le plus bas</option>
+        <option value="prix desc">Prix le plus élevé</option>
+        <option value="date_ajout">Le plus récent</option>
+    </select>
+</div>
+
+{% else %}
+<div id="barreTri" style="position: absolute ; margin-left: 74% ; margin-top: 238px">
+    Trier par :
+    <select name="tri" id="tri" style="width: 64%; height: 30px; border-color: #ccc">
+        <option value=""></option>
+        <option value="prix asc">Prix le plus bas</option>
+        <option value="prix desc">Prix le plus élevé</option>
+        <option value="date_ajout">Le plus récent</option>
+    </select>
+</div>
+{% endif %}
+
+</form>
+<script type="text/javascript">
+    if(document.getElementById('tri')!=null){
+        document.getElementById('tri').value = '{{ tri }}';
+    }
+    document.getElementById('{{ type }}').checked = true;
+    document.getElementById("body").onload = function oldValues() {
+        document.getElementById('motCle').value = '{{ motCle }}';
+        document.getElementById('region').value = '{{ choixRegion }}';
+        document.getElementById('categorie').value = '{{ choixCateg }}';
+         {% for region in regions %}
+            document.getElementById("ville{{region.nomRegion}}").style.display= "none";
+            document.getElementById("ville{{region.nomRegion}}").name = "";
+        {% endfor %}
+        x = "ville"+document.getElementById('region').value;
+        if(document.getElementById(x)){
+        document.getElementById(x).style.display="block"; 
+        document.getElementById(x).name = "ville";
+        document.getElementById(x).value = '{{ choixVille }}';
+         }
+    }
+
+    document.getElementById('region').onchange = function () {
+      {% for region in regions %}
+        document.getElementById("ville{{region.nomRegion}}").style.display= "none";
+        document.getElementById("ville{{region.nomRegion}}").name = "";
+      {% endfor %}
+        x = "ville"+document.getElementById('region').value;
+        if(document.getElementById(x)){
+        document.getElementById(x).style.display="block"; 
+        document.getElementById(x).name = "ville";
+        }
+    }
+
+        function ville(e) {
+        document.getElementById('region').value = e;
+        document.getElementById('motCle').value = '';
+        document.getElementById('categorie').value = '';
+        {% for region in regions %}
+            document.getElementById("ville{{region.nomRegion}}").style.display= "none";
+            document.getElementById("ville{{region.nomRegion}}").name = "";
+        {% endfor %}
+        x = "ville"+document.getElementById('region').value;
+        document.getElementById(x).style.display="block"; 
+        document.getElementById(x).name = "ville";
+        document.getElementById(x).value = "";
+        document.getElementById("search").submit();
+    }
+
+</script>

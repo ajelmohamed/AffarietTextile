@@ -1,0 +1,49 @@
+{% include 'admin/admin.html.twig' %}
+<br><br><br>
+<div class="form-control"
+style="width: 50%; margin-left: 25%; padding-bottom: 50px; float: left; margin-bottom: 100px; margin-top: 15px">
+<h2 class="page-header" style="text-align: center;">Modifier région</h2>
+<br>
+{{ form_start(form) }}
+{{ form_row(form.nomRegion) }}
+
+<div class="input_villes">
+   <p>Villes :</p>
+   <input type="button" class="btn btn-primary add_field_button" style="width: 30%; margin-left:70%; margin-bottom: 15px" value="Ajouter sous catégorie">
+   {% for ville in villes %}
+   <div style="margin-bottom: 15px">
+      <input type="text" class="form-control" id="villes" name="villes[]" style="width:94%; float:left; margin-bottom: 15px" value="{{ ville.nomVille }}">
+      <a href="#" class="btn btn-danger remove_field">x</a>
+  </div>
+  {% endfor %}
+</div>
+
+{{ form_row(form.valider) }}
+{{ form_end(form) }}
+</div>
+
+<br>
+<br>
+<br>
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+    var max_fields      = 50; //maximum input boxes allowed
+    var wrapper         = $(".input_villes"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div style="margin-bottom: 15px"><input type="text" class="form-control" id="villes" name="villes[]" style="width:94%; float:left; margin-bottom: 15px"><a href="#" class="btn btn-danger remove_field">x</a></div>'); //add input box
+        }
+    });
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
+
+</script>

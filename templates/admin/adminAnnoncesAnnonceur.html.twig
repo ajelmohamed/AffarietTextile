@@ -1,0 +1,122 @@
+{% include 'admin/admin.html.twig' %}
+<br><br><br>
+<style type="text/css">
+    #prev {cursor: pointer}
+</style>
+{% if annonces %}
+<h3 style="text-align: center;">Les annonces de {{ annonceur.username }}</h3>
+<br>
+<table class="table table-bordered">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col" style="text-align: center;">Titre</th>
+			<th scope="col" style="text-align: center;">Catégorie</th>
+			<th scope="col" style="text-align: center;">Description</th>
+			<th scope="col" style="text-align: center;">Date ajout</th>
+			<th scope="col" style="text-align: center;">Prix</th>
+			<th scope="col" style="text-align: center;">Image</th>
+			<th scope="col" style="text-align: center;">Region</th>
+			<th scope="col" style="text-align: center;">Ville</th>
+			<th scope="col" style="text-align: center;">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{% for annonce in annonces %}
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.nomProd }}</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.categorie.nomCategorie }}</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.description }}</td>
+			<td style="text-align: center; vertical-align: middle;">
+				{% if ( annonce.dateAjout | date('j')  ==  'now' | date('j')) %}
+                    Aujourd'hui {{ annonce.dateAjout | date('H:i') }}
+                {% elseif ( annonce.dateAjout | date('j')  ==  'now' | date('j')-1) %}
+                    Hier {{ annonce.dateAjout | date('H:i') }}
+                {% else %}
+                    {{ annonce.dateAjout | localizeddate('none', 'none', null, null, 'd MMMM') }} {{ annonce.dateAjout | date('H:i') }}
+                {% endif %}
+			</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.prix }} DT</td>
+			<td style="text-align: center; vertical-align: middle;">
+				{% for image in annonce.images%}
+				<img id="prev" style="width: 70px; height: 70px" onclick="imageshow('{{ asset('uploads/images/' ~ image.name ) }}')" src="{{ asset('uploads/images/' ~ image.name ) }}" alt="Image Annonce">
+				{% endfor %}
+			</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.region.nomRegion }}</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonce.ville.nomVille }}</td>
+			<td style="text-align: center; vertical-align: middle;"><button class="btn btn-danger btn-lg" onclick="showConfirm({{ annonce.id }})"><i class="material-icons">delete</i></button></td>
+		</tr>
+		<div id="confirm{{ annonce.id }}" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="margin-left: 70px">Confirmer la suppression</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 style="">Êtes-vous sûr de vouloir supprimer définitivement l'annonce {{ annonce.nomProd }} ?</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('supprimerAnnonce' , {id: annonce.id} ) }}"><button type="button" class="btn btn-danger">Oui</button></a>
+                    <button type="button" class="btn btn-success" onclick="hideConfirm({{ annonce.id }})">Non</button>
+                    <button type="button" class="btn btn-primary" onclick="hideConfirm({{ annonce.id }})">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+<div id="eleimage" style="position: fixed; z-index: 10 ;  left: 35%; top: 20%; background: black ; width: 440px; height: 440px ; display: none;" >
+    <div style="padding-left: 5px ; padding-top: 5px">
+        <img width="430" height="430" id="eleimg" src="">
+    </div>
+
+</div>
+
+
+{% else %}
+<h3 style="text-align: center;">Aucune annonce pour l'annonceur {{ annonceur.nomAnnonceur }}</h3>
+<br><br>
+<center>
+	<img src="{{ asset('images/noAnnonces.png') }}" alt="Pas d'annonces">
+</center>
+{% endif %}
+
+<div style="position: fixed; background-color: black; width: 100%; height: 100%; top: 0; opacity: 0.6; display: none; z-index: 8"
+id="black_div">
+</div>
+
+
+<script type="text/javascript">
+    function showConfirm(id) {
+        document.getElementById('confirm'+id).style.display = "block";
+        document.getElementById('black_div').style.display = "block";
+    }
+
+    function hideConfirm(id) {
+        document.getElementById('confirm'+id).style.display = "none";
+        document.getElementById('black_div').style.display = "none";
+    }
+
+    function imageshow(value){
+        document.getElementById('eleimg').src=value ;
+        document.getElementById('eleimage').style.display = 'block';
+        document.getElementById('black_div').style.display = 'block';
+    }
+
+    window.onclick = function (e) {
+        if (e.target == document.getElementById('black_div')) {
+            imagehide();
+        }
+    }
+    function imagehide(){
+        document.getElementById('eleimage').style.display = 'none';
+        document.getElementById('black_div').style.display = 'none';
+    }
+
+</script>

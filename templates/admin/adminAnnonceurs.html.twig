@@ -1,0 +1,110 @@
+{% include 'admin/admin.html.twig' %}
+{% include 'admin/admin.html.twig' %}
+<br><br><br>
+<style type="text/css">
+    #prev {cursor: pointer}
+</style>
+{% if annonceurs %}
+<h3 style="text-align: center;">Annonceurs</h3>
+<a href="{{ path('exporterAnnonceurs') }}"><button class="btn btn-success" style="float: right; margin-bottom: 5px">Exporter</button></a>
+<br>
+<table class="table table-bordered">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col" style="text-align: center;">Username</th>
+			<th scope="col" style="text-align: center;">Téléphone</th>
+			<th scope="col" style="text-align: center;">Email</th>
+			<th scope="col" style="text-align: center;">Image</th>
+			<th scope="col" style="text-align: center;">Annonces</th>
+			<th scope="col" style="text-align: center;">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{% for annonceur in annonceurs %}
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">{{ annonceur.username }}</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonceur.numAnnonceur |number_format(0, '', ' ')}}</td>
+			<td style="text-align: center; vertical-align: middle;">{{ annonceur.emailAnnonceur }}</td>
+			<td style="text-align: center; vertical-align: middle;">
+                <img id="prev" style="width: 70px; height: 70px" onclick="imageshow('{{ asset('uploads/profile_images/' ~ annonceur.imageAnnonceur ) }}')" src="{{ asset('uploads/profile_images/' ~ annonceur.imageAnnonceur ) }}" alt="imageAnnonceur"></td>
+                <td style="text-align: center; vertical-align: middle;"><a href="{{ path('AnnoncesAnnonceur', {id: annonceur.id} ) }}">Afficher tous</a></td>
+                <td style="text-align: center; vertical-align: middle;"><button onclick="showConfirm({{ annonceur.id }})" class="btn btn-danger btn-lg"><i class="material-icons">delete</i></button></td>
+			<!-- 
+				/admin-panel/supprimer/annonceur/{{ annonceur.id }}
+			-->
+		</tr>
+
+      <div id="confirm{{ annonceur.id }}" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="margin-left: 70px">Confirmer la suppression</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 style="">Êtes-vous sûr de vouloir supprimer définitivement l'annonceur {{ annonceur.nomAnnonceur }} et toutes ses annonces ?</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('supprimerAnnonceur', {id: annonceur.id} ) }}"><button type="button" class="btn btn-danger">Oui</button></a>
+                    <button type="button" class="btn btn-success" onclick="hideConfirm({{ annonceur.id }})">Non</button>
+                    <button type="button" class="btn btn-primary" onclick="hideConfirm({{ annonceur.id }})">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</tbody>
+</table>
+
+<div id="eleimage" style="position: fixed; z-index: 10 ;  left: 35%; top: 20%; background: black ; width: 440px; height: 440px ; display: none;" >
+    <div style="padding-left: 5px ; padding-top: 5px">
+        <img width="430" height="430" id="eleimg" src="">
+    </div>
+
+</div>
+
+
+{% else %}
+<h3 style="text-align: center;">Aucun annonceur existant</h3>
+<br><br>
+<center>
+    <img src="{{ asset('images/noAnnonces.png') }}" alt="Pas d'annonces">
+</center>
+{% endif %}
+
+<div style="position: fixed; background-color: black; width: 100%; height: 100%; top: 0; opacity: 0.6; display: none; z-index: 8"
+id="black_div">
+</div>
+
+
+<script type="text/javascript">
+    function showConfirm(id) {
+        document.getElementById('confirm'+id).style.display = "block";
+        document.getElementById('black_div').style.display = "block";
+    }
+
+    function hideConfirm(id) {
+        document.getElementById('confirm'+id).style.display = "none";
+        document.getElementById('black_div').style.display = "none";
+    }
+
+    function imageshow(value){
+        document.getElementById('eleimg').src=value ;
+        document.getElementById('eleimage').style.display = 'block';
+        document.getElementById('black_div').style.display = 'block';
+    }
+
+    window.onclick = function (e) {
+        if (e.target == document.getElementById('black_div')) {
+            imagehide();
+        }
+    }
+    function imagehide(){
+        document.getElementById('eleimage').style.display = 'none';
+        document.getElementById('black_div').style.display = 'none';
+    }
+
+</script>
